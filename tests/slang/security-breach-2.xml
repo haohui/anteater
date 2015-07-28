@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<test>
+<result sat="1" unsat="1"/>
+<network>
+  <router id="0" name="192.17.0.0/24">
+    <interface id="0" nexthop_id="3">
+      <fib dest="0.0.0.0/0"/>
+    </interface>
+    <interface id="1" nexthop_id="1">
+      <fib dest="192.17.1.0/24"/>
+    </interface>
+    <interface id="2" nexthop_id="2">
+      <fib dest="10.0.1.0/24"/>
+    </interface>
+  </router>
+  <router id="1" name="192.17.1.0/24">
+    <interface id="0" nexthop_id="3">
+      <fib dest="0.0.0.0/0"/>
+    </interface>
+    <interface id="1" nexthop_id="0">
+      <fib dest="192.17.0.0/24"/>
+    </interface>
+  </router>
+  <router id="2" name="72.36.112.0/24">
+    <interface id="0" nexthop_id="4">
+      <fib dest="0.0.0.0/0"/>
+    </interface>
+    <interface id="1" nexthop_id="0">
+      <fib dest="10.0.1.0/24"/>
+      <transformation-nat src="0.0.0.0/0" dest="10.0.1.0/24"/>
+      <transformation-setfield>
+	<field id="1" op="identical"/>
+      </transformation-setfield>
+    </interface>
+  </router>
+  <router id="3" name="fw">
+    <interface id="0" nexthop_id="0">
+      <fib dest="192.17.0.0/24"/>
+    </interface>
+    <interface id="1" nexthop_id="1">
+      <fib dest="192.17.1.0/24"/>
+    </interface>
+    <interface id="2" nexthop_id="4">
+      <fib dest="0.0.0.0/0"/>
+    </interface>
+  </router>
+  <router id="4" name="ext-router">
+    <interface id="0" nexthop_id="3">
+      <fib dest="192.17.0.0/23"/>
+    </interface>
+    <interface id="1" nexthop_id="2">
+      <fib dest="72.36.112.0/24"/>
+    </interface>
+  </router>
+</network>
+</test>

@@ -1,0 +1,8 @@
+diff -urN jruby-1.6.3-orig/lib/ruby/site_ruby/shared/ffi/enum.rb jruby-1.6.3/lib/ruby/site_ruby/shared/ffi/enum.rb
+--- jruby-1.6.3-orig/lib/ruby/site_ruby/shared/ffi/enum.rb	2011-08-04 22:41:51.000000000 -0500
++++ jruby-1.6.3/lib/ruby/site_ruby/shared/ffi/enum.rb	2011-08-04 22:43:20.000000000 -0500
+@@ -1 +1,2 @@
+-# The enum functionality has been migrated to Enum.java
+\ No newline at end of file
++# The enum functionality has been migrated to Enum.java
++

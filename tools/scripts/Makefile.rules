@@ -1,0 +1,92 @@
+# Verbose output from solver
+DIAGNOSE ?=
+
+# Timeout for SMT solver
+TIMEOUT ?= 1200
+
+# Whether to time each operation
+TIME_OPERATION ?= 0
+
+# Try to merge packet
+TRY_MERGE_PACKET ?=
+
+MAKEFLAGS += -R
+
+OPT_BIN := $(LLVM_BIN_DIR)/opt
+LLVMLD_BIN := $(LLVM_BIN_DIR)/llvm-ld
+TIME_BIN := /usr/bin/time
+ANTEATERCC_BIN := $(ANTEATER_BUILD_DIR)/tools/anteatercc/anteatercc
+GEN_HINT_BIN := $(RUBY_BIN) -I$(ANTEATER_BUILD_DIR)/lib/Ruby $(ANTEATER_SRC_DIR)/tools/scripts/merge-packet.rb
+
+ANTEATERCC_FLAGS := -backend smt12
+OPT_BASE_FLAGS := -adce -gvn -instcombine -gvn -instcombine -globaldce
+OPT_PASS1_FLAGS := -load $(ANTEATER_BUILD_DIR)/lib/Transform/libSPATransform$(SHEXT) -globaldce -adce -bare-gvn -adce -gvn -instcombine
+
+LLVMLD_FLAGS := -disable-opt -disable-verify -link-as-library \
+ -load $(ANTEATER_BUILD_DIR)/lib/Transform/libSPATransform$(SHEXT) -remove-annotation -internalize \
+ -bare-gvn -basiccg -inline -adce -basicaa -gvn -packet-scalar-repl -gvn -sym-pkt-rpe -globaldce -reassociate -gvn -instcombine -adce
+
+ifeq ($(VERBOSE),1)
+	Q = @
+	quiet =
+else
+	Q = @
+	quiet = quiet_
+endif
+
+ifeq ($(DIAGNOSE),1)
+SOLVER_FLAGS := $(SOLVER_FLAGS) $(SOLVER_DIAGNOSE_FLAGS)
+endif
+
+echo-cmd = $(if $($(quiet)cmd_$(1)),\
+	echo '  $(call $(quiet)cmd_$(1))';)
+
+quiet_cmd_opt_bc_base = OPT-BASE $@
+cmd_opt_bc_base = $(OPT_BIN) $(OPT_BASE_FLAGS) -f $< -o $@
+
+quiet_cmd_opt_bc_pass1 = OPT-PASS1 $@
+cmd_opt_bc_pass1 = $(OPT_BIN) $(OPT_PASS1_FLAGS) -f $< -o $@
+
+quiet_cmd_anteatercc = COMPILE $@
+cmd_anteatercc = $(ANTEATERCC_BIN) $(ANTEATERCC_FLAGS) $< -o $@
+
+quiet_cmd_sat = SOLVE $@
+cmd_sat = $(TIMEOUT_BIN) $(TIMEOUT) $(SOLVER_BIN) $(SOLVER_FLAGS) $< > $@ || true
+
+quiet_cmd_llvmld = LLVMLD $@
+cmd_llvmld = $(LLVMLD_BIN) $(LLVMLD_FLAGS) $^ -o $@
+
+quite_cmd_merge_packet = PKT-MERGE $@
+cmd_merge_packet = $(GEN_HINT_BIN) $< $@ $(BC_BASE)
+
+ifeq ($(TIME_OPERATION),0)
+cmd = @$(echo-cmd) $(call cmd_$(1))
+else
+cmd_time = echo -n "$1," >> $*.time; $(TIME_BIN) -f '%e,%U,%S,%x' --append --output=$*.time -- $(cmd_$(1))
+cmd = @$(echo-cmd) $(call cmd_time,$(1),$(2))
+endif
+
+# Rules
+
+%.result : %.smt
+	$(call cmd,sat)
+
+%.smt : %.bc-linked
+	$(call cmd,anteatercc)
+
+%.bc-linked: $(BC_WHITELIST) %.bc-srcs-opt $(BC_BASE:.bc=.bc-opt)
+	$(call cmd,llvmld)
+
+ifeq ($(TRY_MERGE_PACKET),1)
+%.bc-srcs-opt : %.bc-srcs-opt-pass1
+	$(call cmd,merge_packet)
+else
+%.bc-srcs-opt : %.bc-srcs-opt-pass1
+	@ln -f $< $@
+endif
+
+%.bc-srcs-opt-pass1 : %.bc
+	$(call cmd,opt_bc_pass1)
+
+$(BC_BASE:.bc=.bc-opt) : %.bc-opt : %.bc
+	$(call cmd,opt_bc_base)

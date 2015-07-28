@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<manifest>
+<test>
+<result sat="2" unsat="0"/>
+</test>
+<data>
+<node name="r1" file="loop-detection-1-r1"/>
+<node name="r2" file="loop-detection-1-r2"/>
+</data>
+
+</manifest>

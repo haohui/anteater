@@ -1,0 +1,5 @@
+include $(ANTEATER_BUILD_DIR)/Makefile.config
+
+include $(ANTEATER_SRC_DIR)/tools/scripts/Makefile.rules
+
+all_results: $(BC_SRCS:.bc=.result)

@@ -1,0 +1,23 @@
+include $(ANTEATER_BUILD_DIR)/Makefile.config
+include $(ANTEATER_SRC_DIR)/tools/scripts/Makefile.rules
+
+BC_SRCS := $(filter-out $(BC_BASE) $(BC_WHITELIST),$(wildcard *.bc))
+TARGETS := $(BC_SRCS:.bc=.report)
+TIME_OPERATION := 1
+
+ifeq ($(KEEP_RESULT),1)
+TARGETS += $(BC_SRCS:.bc=.result)
+endif
+
+all: clean-time $(TARGETS)
+
+%.report : %.result
+	@cat $*.time > $@
+
+clean:
+	@rm -f *.bc-opt *.smt *.result *.report *.time
+
+clean-time:
+	@rm -f *.time
+
+.PHONY: clean clean-time

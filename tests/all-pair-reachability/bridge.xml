@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<test>
+<result sat="6" unsat="0"/>
+<network>
+  <router id="0" name="1.0.0.0/8">
+    <interface id="0" nexthop_id="1">
+      <fib dest="2.0.0.0/8"/>
+      <fib dest="3.0.0.0/8"/>
+    </interface>
+  </router>
+  <router id="1" name="10.0.0.0/24">
+    <interface id="0" nexthop_id="0">
+      <fib dest="1.0.0.0/8"/>
+    </interface>
+    <interface id="1" nexthop_id="2">
+      <fib dest="3.0.0.0/8"/>
+    </interface>
+  </router>
+  <router id="2" name="3.0.0.0/8">
+    <interface id="0" nexthop_id="1">
+      <fib dest="1.0.0.0/8"/>
+      <fib dest="2.0.0.0/8"/>
+    </interface>
+  </router>
+</network>
+</test>

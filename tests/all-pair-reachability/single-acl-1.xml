@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<test>
+<result sat="1" unsat="0"/>
+<network>
+  <router id="0" name="43.0.0.0/8">
+    <interface id="0" nexthop_id="1">
+      <fib dest="192.168.1.1/32"/>
+      <acl action="accept">
+	<field name="dest" op="eq">
+	  <prefix>192.168.1.1/32</prefix>
+	</field>
+      </acl>
+      <acl action="deny"/>
+    </interface>
+  </router>
+  <router id="1" name="192.168.1.1/32"/>
+</network>
+</test>

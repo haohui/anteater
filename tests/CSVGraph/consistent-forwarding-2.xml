@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<manifest>
+<test>
+<result sat="1" unsat="0"/>
+</test>
+<data>
+<pair-list file="consistent-forwarding-1-pair"/>
+<node name="r1" file="consistent-forwarding-2-r1"/>
+<node name="r2" file="consistent-forwarding-2-r2"/>
+</data>
+
+</manifest>

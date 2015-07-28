@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<test>
+<result sat="2" unsat="1"/>
+<network>
+  <router id="0" name="43.0.0.0/8">
+    <interface id="0" nexthop_id="1">
+      <fib dest="0.0.0.0/0"/>
+      <transformation-setfield>
+	<field id="4">
+	  <integer value="1" length="1"/>
+	</field>
+	<field name="dest" op="identical"/>
+	<field name="src" op="identical"/>
+	<field name="src-port" op="identical"/>
+	<field name="dst-port" op="identical"/>
+      </transformation-setfield>
+    </interface>
+  </router>
+  <router id="1" name="43.0.0.0/8">
+    <interface id="0" nexthop_id="2">
+      <fib dest="0.0.0.0/0"/>
+      <acl action="deny">
+	<field id="4" op="eq">
+	  <integer value="1" length="1"/>
+	</field>
+      </acl>
+    </interface>
+  </router>
+  <router id="2" name="ext"/>
+</network>
+</test>

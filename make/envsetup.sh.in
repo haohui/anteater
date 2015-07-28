@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ANTEATER_BUILD_DIR=@CMAKE_CURRENT_BINARY_DIR@
+ANTEATER_SRC_DIR=@CMAKE_CURRENT_SOURCE_DIR@
+LLVM_BIN_DIR=@LLVM_BINARY_DIR@
+YICES_BIN=@Yices_EXECUTABLE@
+LD_LIBRARY_PATH=@CMAKE_CURRENT_BINARY_DIR@/lib/Core:$LD_LIBRARY_PATH
+JRUBY_OPTS="--server --1.9 -J-Xmx16384m -J-Djruby.compile.fastest=true -J-Djruby.compile.frameless=true -J-Djruby.compile.positionless=true -J-Djruby.compile.fastops=true -J-Djruby.compile.fastcase=true -J-Djruby.compile.lazyHandles=true"
+RUBY_EXECUTABLE=@RUBY_EXECUTABLE@
+
+export ANTEATER_BUILD_DIR ANTEATER_SRC_DIR LLVM_BIN_DIR YICES_BIN LD_LIBRARY_PATH JRUBY_OPTS RUBY_EXECUTABLE

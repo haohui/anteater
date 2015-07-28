@@ -1,0 +1,6 @@
+%11.0.0.0/8,DIRECT,Serial0/0/0,D
+%12.0.0.0/8,DIRECT,Serial1/0/0,D
+192.168.20.0/24,11.0.0.1,Serial0/0/0,Oi
+172.16.0.0/16,11.0.0.1,Serial0/0/0,Oi
+11.0.0.2/32,DIRECT,loopback 1,D
+12.0.0.2/32,DIRECT,loopback 2,D

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<manifest>
+<test>
+<result sat="0" unsat="1"/>
+</test>
+<data>
+<node name="r1" file="packet-loss-2-r1"/>
+</data>
+</manifest>

@@ -1,0 +1,17 @@
+diff -urN -x picosat-936 -x '*.o' new/boolector-1.4.1-376e6b0-110304/btorsmt.c boolector-1.4.1-376e6b0-110304/btorsmt.c
+--- new/boolector-1.4.1-376e6b0-110304/btorsmt.c	2010-06-14 11:30:40.000000000 -0500
++++ boolector-1.4.1-376e6b0-110304/btorsmt.c	2011-08-07 22:00:19.000000000 -0500
+@@ -1134,7 +1134,12 @@
+ 
+   p = sortsymbol->name;
+ 
+-  if (has_prefix (p, "BitVec"))
++  if (strcmp("Bool", p) == 0)
++    {
++      symbol->exp = btor_var_exp (parser->btor, 1, symbol->name);
++      push_input (parser, symbol->exp);
++    }
++  else if (has_prefix (p, "BitVec"))
+     {
+       if (!(p = next_numeral (p)) || next_numeral (p))
+ 	goto INVALID_SORT;

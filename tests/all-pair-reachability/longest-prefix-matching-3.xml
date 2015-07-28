@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<test>
+<result sat="2" unsat="1"/>
+<network>
+  <router id="0" name="43.0.0.0/8">
+    <interface id="0" nexthop_id="1">
+      <fib dest="10.0.0.0/24"/>
+    </interface>
+  </router>
+  <router id="1" name="10.0.0.0/24">
+    <interface id="0" nexthop_id="2">
+      <fib dest="192.168.0.0/24"/>
+    </interface>
+  </router>
+  <router id="2" name="192.168.0.0/24"/>
+</network>
+</test>
